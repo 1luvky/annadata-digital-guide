@@ -1,6 +1,5 @@
-
 import React, { useState, useEffect } from 'react';
-import { TrendingUp, TrendingDown, ArrowLeft, MapPin, Calendar, Refresh } from 'lucide-react';
+import { TrendingUp, TrendingDown, ArrowLeft, MapPin, Calendar, RefreshCw } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 
@@ -156,7 +155,7 @@ const MarketPrices = ({ onBack }: { onBack: () => void }) => {
               disabled={isLoading}
               className="text-harvest-600"
             >
-              <Refresh className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
+              <RefreshCw className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
             </Button>
           </div>
           
