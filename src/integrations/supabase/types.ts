@@ -9,7 +9,103 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      interaction_logs: {
+        Row: {
+          input_content: string | null
+          input_method: string
+          interaction_id: string
+          timestamp: string
+          type: string
+          user_id: string | null
+        }
+        Insert: {
+          input_content?: string | null
+          input_method: string
+          interaction_id?: string
+          timestamp?: string
+          type: string
+          user_id?: string | null
+        }
+        Update: {
+          input_content?: string | null
+          input_method?: string
+          interaction_id?: string
+          timestamp?: string
+          type?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "interaction_logs_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
+      media_files: {
+        Row: {
+          file_url: string
+          media_id: string
+          type: string
+          uploaded_on: string
+          user_id: string | null
+        }
+        Insert: {
+          file_url: string
+          media_id?: string
+          type: string
+          uploaded_on?: string
+          user_id?: string | null
+        }
+        Update: {
+          file_url?: string
+          media_id?: string
+          type?: string
+          uploaded_on?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "media_files_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
+      users: {
+        Row: {
+          created_at: string
+          location: string | null
+          name: string
+          phone_number: string | null
+          preferred_language: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          location?: string | null
+          name: string
+          phone_number?: string | null
+          preferred_language?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Update: {
+          created_at?: string
+          location?: string | null
+          name?: string
+          phone_number?: string | null
+          preferred_language?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
