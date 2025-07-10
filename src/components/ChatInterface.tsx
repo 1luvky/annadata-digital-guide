@@ -1,6 +1,6 @@
 
-import React, { useState, useRef } from 'react';
-import { Send, Mic, MicOff, Camera, Upload, Loader2 } from 'lucide-react';
+import React, { useState, useRef, useEffect } from 'react';
+import { Send, Mic, MicOff, Camera, Loader2, Sparkles } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 
@@ -26,7 +26,17 @@ const ChatInterface = () => {
   const [inputText, setInputText] = useState('');
   const [isRecording, setIsRecording] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isTyping, setIsTyping] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
 
   const sendMessage = (content: string, messageType: 'text' | 'image' | 'voice' = 'text', imageUrl?: string) => {
     const userMessage: Message = {
@@ -40,9 +50,11 @@ const ChatInterface = () => {
 
     setMessages(prev => [...prev, userMessage]);
     setIsLoading(true);
+    setIsTyping(true);
 
-    // Simulate AI response
+    // Simulate AI response with typing effect
     setTimeout(() => {
+      setIsTyping(false);
       let response = '';
       
       if (messageType === 'image') {
@@ -77,7 +89,6 @@ const ChatInterface = () => {
 
   const handleVoiceRecord = () => {
     setIsRecording(true);
-    // Simulate voice recording
     setTimeout(() => {
       setIsRecording(false);
       sendMessage('What is the price of onions today in Mysore mandi?', 'voice');
@@ -97,125 +108,178 @@ const ChatInterface = () => {
   };
 
   const quickQuestions = [
-    'What is today\'s tomato price?',
-    'How to treat leaf curl disease?',
-    'Tell me about PM-KISAN scheme',
-    'Best fertilizer for potato crop?'
+    '🍅 What is today\'s tomato price?',
+    '🍃 How to treat leaf curl disease?',
+    '📋 Tell me about PM-KISAN scheme',
+    '🥔 Best fertilizer for potato crop?'
   ];
 
   return (
-    <div className="flex flex-col h-screen bg-gradient-to-br from-green-50 via-white to-orange-50 pb-20">
-      {/* Header */}
-      <div className="bg-gradient-to-r from-forest-600 to-forest-700 text-white py-4 px-4">
+    <div className="flex flex-col h-screen bg-gradient-to-br from-forest-50 via-white to-earth-50">
+      {/* Enhanced Header */}
+      <div className="bg-gradient-to-r from-forest-600 via-forest-700 to-forest-800 text-white py-6 px-4 shadow-lg">
         <div className="max-w-md mx-auto text-center">
-          <h1 className="text-xl font-bold">Project Kisan Assistant</h1>
-          <p className="text-forest-100 text-sm">Your AI farming expert</p>
+          <div className="flex items-center justify-center mb-2">
+            <Sparkles className="h-6 w-6 mr-2 text-earth-300 animate-pulse" />
+            <h1 className="text-2xl font-bold tracking-wide">Kisan AI Assistant</h1>
+          </div>
+          <p className="text-forest-100 text-sm opacity-90">Your intelligent farming companion</p>
+          <div className="mt-3 h-1 bg-gradient-to-r from-transparent via-earth-400 to-transparent rounded-full opacity-60"></div>
         </div>
       </div>
 
-      {/* Messages */}
-      <div className="flex-1 overflow-y-auto px-4 py-4 max-w-md mx-auto w-full">
-        {messages.map((message) => (
-          <div key={message.id} className={`mb-4 ${message.type === 'user' ? 'text-right' : 'text-left'}`}>
-            <Card className={`inline-block max-w-[80%] p-3 ${
+      {/* Enhanced Messages Area */}
+      <div className="flex-1 overflow-y-auto px-4 py-6 max-w-md mx-auto w-full space-y-4">
+        {messages.map((message, index) => (
+          <div 
+            key={message.id} 
+            className={`animate-fade-in ${message.type === 'user' ? 'text-right' : 'text-left'}`}
+            style={{ animationDelay: `${index * 0.1}s` }}
+          >
+            <Card className={`inline-block max-w-[85%] p-4 shadow-md transition-all duration-300 hover:shadow-lg ${
               message.type === 'user' 
-                ? 'bg-forest-600 text-white ml-auto' 
-                : 'bg-white border-forest-200'
+                ? 'bg-gradient-to-r from-forest-600 to-forest-700 text-white ml-auto border-0' 
+                : 'bg-white border-forest-200 hover:border-forest-300'
             }`}>
               {message.imageUrl && (
-                <img src={message.imageUrl} alt="Uploaded crop" className="w-full h-32 object-cover rounded mb-2" />
+                <img 
+                  src={message.imageUrl} 
+                  alt="Uploaded crop" 
+                  className="w-full h-40 object-cover rounded-lg mb-3 shadow-sm" 
+                />
               )}
-              <p className="text-sm">{message.content}</p>
-              <p className={`text-xs mt-1 ${message.type === 'user' ? 'text-forest-100' : 'text-gray-500'}`}>
-                {message.timestamp.toLocaleTimeString()}
+              <p className={`text-sm leading-relaxed ${message.type === 'user' ? 'text-white' : 'text-gray-800'}`}>
+                {message.content}
+              </p>
+              <p className={`text-xs mt-2 ${
+                message.type === 'user' ? 'text-forest-100' : 'text-gray-500'
+              }`}>
+                {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
               </p>
             </Card>
           </div>
         ))}
         
+        {/* Enhanced Loading State */}
         {isLoading && (
-          <div className="text-left mb-4">
-            <Card className="inline-block p-3 bg-white border-forest-200">
-              <div className="flex items-center space-x-2">
-                <Loader2 className="h-4 w-4 animate-spin text-forest-600" />
-                <span className="text-sm text-forest-600">Analyzing...</span>
+          <div className="text-left animate-fade-in">
+            <Card className="inline-block p-4 bg-white border-forest-200 shadow-md">
+              <div className="flex items-center space-x-3">
+                <div className="relative">
+                  <Loader2 className="h-5 w-5 animate-spin text-forest-600" />
+                  <div className="absolute inset-0 h-5 w-5 border-2 border-forest-200 rounded-full animate-pulse"></div>
+                </div>
+                <div className="space-y-1">
+                  <span className="text-sm text-forest-700 font-medium">
+                    {isTyping ? 'Analyzing your question...' : 'Thinking...'}
+                  </span>
+                  <div className="flex space-x-1">
+                    <div className="w-2 h-2 bg-forest-400 rounded-full animate-bounce"></div>
+                    <div className="w-2 h-2 bg-forest-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                    <div className="w-2 h-2 bg-forest-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                  </div>
+                </div>
               </div>
             </Card>
           </div>
         )}
+        <div ref={messagesEndRef} />
       </div>
 
-      {/* Quick Questions */}
+      {/* Enhanced Quick Questions */}
       {messages.length === 1 && (
         <div className="px-4 pb-4 max-w-md mx-auto w-full">
-          <div className="space-y-2">
-            <p className="text-sm text-forest-700 font-medium">Quick questions:</p>
-            {quickQuestions.map((question, index) => (
-              <Button
-                key={index}
-                variant="outline"
-                className="w-full text-left justify-start border-forest-200 text-forest-700 hover:bg-forest-50"
-                onClick={() => sendMessage(question)}
-              >
-                {question}
-              </Button>
-            ))}
+          <div className="space-y-3">
+            <div className="text-center">
+              <p className="text-sm text-forest-700 font-semibold mb-1">Quick Start</p>
+              <p className="text-xs text-gray-600">Try asking about these topics:</p>
+            </div>
+            <div className="grid grid-cols-2 gap-2">
+              {quickQuestions.map((question, index) => (
+                <Button
+                  key={index}
+                  variant="outline"
+                  className="text-left justify-start border-forest-200 text-forest-700 hover:bg-gradient-to-r hover:from-forest-50 hover:to-earth-50 hover:border-forest-300 transition-all duration-200 p-3 h-auto text-xs leading-tight"
+                  onClick={() => sendMessage(question.replace(/^[🍅🍃📋🥔]\s/, ''))}
+                >
+                  <span className="truncate">{question}</span>
+                </Button>
+              ))}
+            </div>
           </div>
         </div>
       )}
 
-      {/* Input Area */}
-      <div className="bg-white border-t border-gray-200 p-4">
-        <div className="max-w-md mx-auto flex items-center space-x-2">
-          <div className="flex-1 flex items-center bg-gray-100 rounded-full px-3 py-2">
-            <input
-              type="text"
-              value={inputText}
-              onChange={(e) => setInputText(e.target.value)}
-              placeholder="Type your farming question..."
-              className="flex-1 bg-transparent outline-none text-sm"
-              onKeyPress={(e) => e.key === 'Enter' && handleSendText()}
-            />
-            <Button
-              size="sm"
-              className="ml-2 bg-forest-600 hover:bg-forest-700 text-white rounded-full w-8 h-8 p-0"
-              onClick={handleSendText}
-              disabled={!inputText.trim()}
-            >
-              <Send className="h-4 w-4" />
-            </Button>
+      {/* Enhanced Input Area */}
+      <div className="bg-white border-t border-gray-200 p-4 shadow-lg">
+        <div className="max-w-md mx-auto">
+          <div className="flex items-end space-x-3">
+            {/* Enhanced Text Input */}
+            <div className="flex-1 relative">
+              <div className="flex items-center bg-gradient-to-r from-gray-50 to-gray-100 rounded-2xl border border-gray-200 focus-within:border-forest-400 focus-within:ring-2 focus-within:ring-forest-100 transition-all duration-200 shadow-sm">
+                <input
+                  type="text"
+                  value={inputText}
+                  onChange={(e) => setInputText(e.target.value)}
+                  placeholder="Ask me anything about farming..."
+                  className="flex-1 bg-transparent outline-none text-sm px-4 py-3 placeholder-gray-500"
+                  onKeyPress={(e) => e.key === 'Enter' && handleSendText()}
+                />
+                <Button
+                  size="sm"
+                  className="mr-2 bg-gradient-to-r from-forest-600 to-forest-700 hover:from-forest-700 hover:to-forest-800 text-white rounded-xl w-9 h-9 p-0 shadow-md transition-all duration-200 hover:shadow-lg transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                  onClick={handleSendText}
+                  disabled={!inputText.trim() || isLoading}
+                >
+                  <Send className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
+            
+            {/* Enhanced Action Buttons */}
+            <div className="flex space-x-2">
+              <Button
+                size="sm"
+                className={`rounded-2xl w-12 h-12 p-0 shadow-md transition-all duration-300 transform hover:scale-105 ${
+                  isRecording 
+                    ? 'bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 animate-pulse' 
+                    : 'bg-gradient-to-r from-earth-600 to-earth-700 hover:from-earth-700 hover:to-earth-800'
+                } text-white disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none`}
+                onClick={handleVoiceRecord}
+                disabled={isRecording || isLoading}
+              >
+                {isRecording ? (
+                  <MicOff className="h-5 w-5" />
+                ) : (
+                  <Mic className="h-5 w-5" />
+                )}
+              </Button>
+              
+              <Button
+                size="sm"
+                className="bg-gradient-to-r from-forest-600 to-forest-700 hover:from-forest-700 hover:to-forest-800 text-white rounded-2xl w-12 h-12 p-0 shadow-md transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                onClick={() => fileInputRef.current?.click()}
+                disabled={isLoading}
+              >
+                <Camera className="h-5 w-5" />
+              </Button>
+            </div>
           </div>
           
-          <Button
-            size="sm"
-            className={`rounded-full w-10 h-10 p-0 ${
-              isRecording 
-                ? 'bg-red-500 hover:bg-red-600' 
-                : 'bg-earth-600 hover:bg-earth-700'
-            } text-white`}
-            onClick={handleVoiceRecord}
-            disabled={isRecording}
-          >
-            {isRecording ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
-          </Button>
-          
-          <Button
-            size="sm"
-            className="bg-forest-600 hover:bg-forest-700 text-white rounded-full w-10 h-10 p-0"
-            onClick={() => fileInputRef.current?.click()}
-          >
-            <Camera className="h-4 w-4" />
-          </Button>
-          
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept="image/*"
-            capture="environment"
-            onChange={handleImageUpload}
-            className="hidden"
-          />
+          {/* Input Helper Text */}
+          <p className="text-xs text-gray-500 mt-2 text-center">
+            Type, speak, or upload an image for crop analysis
+          </p>
         </div>
+        
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/*"
+          capture="environment"
+          onChange={handleImageUpload}
+          className="hidden"
+        />
       </div>
     </div>
   );
