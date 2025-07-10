@@ -1,6 +1,6 @@
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Send, Mic, MicOff, Camera, Loader2, Sparkles } from 'lucide-react';
+import { Send, Mic, MicOff, Camera, Loader2, Sparkles, MessageCircle } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 
@@ -18,7 +18,7 @@ const ChatInterface = () => {
     {
       id: '1',
       type: 'assistant',
-      content: 'Namaste! I am your personal agricultural assistant. Ask me about crop diseases, market prices, government schemes, or any farming questions. You can type, speak, or send images.',
+      content: 'Welcome to Kisan AI! I\'m here to help you with farming insights, crop diseases, market prices, and government schemes. How can I assist you today?',
       timestamp: new Date(),
       messageType: 'text'
     }
@@ -52,19 +52,19 @@ const ChatInterface = () => {
     setIsLoading(true);
     setIsTyping(true);
 
-    // Simulate AI response with typing effect
+    // Simulate AI response
     setTimeout(() => {
       setIsTyping(false);
       let response = '';
       
       if (messageType === 'image') {
-        response = 'I can see your crop image. This appears to be tomato leaf curl disease. Apply neem oil spray and remove affected leaves immediately. Cost: ₹50-100 per acre.';
+        response = 'I can analyze your crop image. This appears to show signs of nutrient deficiency. Consider applying balanced fertilizer and ensure proper watering. Estimated cost: ₹75-120 per acre.';
       } else if (content.toLowerCase().includes('price') || content.toLowerCase().includes('market')) {
-        response = 'Current tomato prices in Bangalore APMC are ₹25-30 per kg. Prices increased 15% from yesterday. Best time to sell is today or tomorrow morning.';
+        response = 'Current market rates: Tomato ₹28-32/kg, Onion ₹20-25/kg, Potato ₹18-22/kg in major mandis. Prices show 10% increase from last week. Best selling window is early morning.';
       } else if (content.toLowerCase().includes('scheme') || content.toLowerCase().includes('subsidy')) {
-        response = 'PM-KISAN scheme provides ₹6000 annually. You need Aadhaar and land records. Apply at pmkisan.gov.in. Drip irrigation subsidy available up to 50% cost.';
+        response = 'Available schemes: PM-KISAN (₹6000/year), Soil Health Card (free), Crop Insurance (up to 80% coverage). Visit your nearest Krishi Vigyan Kendra for registration assistance.';
       } else {
-        response = 'I understand your question about farming. Let me help you with detailed information. Could you be more specific about what you need help with?';
+        response = 'I\'m here to help with all your farming needs. You can ask me about crop diseases, market prices, weather updates, government schemes, or general agricultural practices. What specific information would you like?';
       }
 
       const assistantMessage: Message = {
@@ -91,7 +91,7 @@ const ChatInterface = () => {
     setIsRecording(true);
     setTimeout(() => {
       setIsRecording(false);
-      sendMessage('What is the price of onions today in Mysore mandi?', 'voice');
+      sendMessage('What are the current weather conditions for farming in Karnataka?', 'voice');
     }, 3000);
   };
 
@@ -101,133 +101,161 @@ const ChatInterface = () => {
       const reader = new FileReader();
       reader.onload = (e) => {
         const imageUrl = e.target?.result as string;
-        sendMessage('Please analyze this crop image for diseases', 'image', imageUrl);
+        sendMessage('Please analyze this crop image for any diseases or issues', 'image', imageUrl);
       };
       reader.readAsDataURL(file);
     }
   };
 
-  const quickQuestions = [
-    '🍅 What is today\'s tomato price?',
-    '🍃 How to treat leaf curl disease?',
-    '📋 Tell me about PM-KISAN scheme',
-    '🥔 Best fertilizer for potato crop?'
+  const quickSuggestions = [
+    { icon: '🌾', text: 'Check crop prices', query: 'What are today\'s crop prices?' },
+    { icon: '🍃', text: 'Disease diagnosis', query: 'Help me identify crop diseases' },
+    { icon: '💰', text: 'Government schemes', query: 'Show me available subsidies' },
+    { icon: '🌤️', text: 'Weather forecast', query: 'What\'s the weather like for farming?' }
   ];
 
   return (
-    <div className="flex flex-col h-screen bg-gradient-to-br from-forest-50 via-white to-earth-50">
-      {/* Enhanced Header */}
-      <div className="bg-gradient-to-r from-forest-600 via-forest-700 to-forest-800 text-white py-6 px-4 shadow-lg">
-        <div className="max-w-md mx-auto text-center">
-          <div className="flex items-center justify-center mb-2">
-            <Sparkles className="h-6 w-6 mr-2 text-earth-300 animate-pulse" />
-            <h1 className="text-2xl font-bold tracking-wide">Kisan AI Assistant</h1>
+    <div className="flex flex-col h-screen bg-gradient-to-br from-slate-50 via-white to-green-50">
+      {/* Modern Header */}
+      <div className="relative bg-white/80 backdrop-blur-xl border-b border-gray-200/50 shadow-sm">
+        <div className="absolute inset-0 bg-gradient-to-r from-green-500/5 via-blue-500/5 to-green-500/5"></div>
+        <div className="relative max-w-4xl mx-auto px-6 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-3">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center shadow-lg">
+                <Sparkles className="h-5 w-5 text-white" />
+              </div>
+              <div>
+                <h1 className="text-xl font-semibold text-gray-900">Kisan AI</h1>
+                <p className="text-sm text-gray-500">Your intelligent farming assistant</p>
+              </div>
+            </div>
+            <div className="flex items-center space-x-2">
+              <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+              <span className="text-xs text-gray-500 font-medium">Online</span>
+            </div>
           </div>
-          <p className="text-forest-100 text-sm opacity-90">Your intelligent farming companion</p>
-          <div className="mt-3 h-1 bg-gradient-to-r from-transparent via-earth-400 to-transparent rounded-full opacity-60"></div>
         </div>
       </div>
 
-      {/* Enhanced Messages Area */}
-      <div className="flex-1 overflow-y-auto px-4 py-6 max-w-md mx-auto w-full space-y-4">
-        {messages.map((message, index) => (
-          <div 
-            key={message.id} 
-            className={`animate-fade-in ${message.type === 'user' ? 'text-right' : 'text-left'}`}
-            style={{ animationDelay: `${index * 0.1}s` }}
-          >
-            <Card className={`inline-block max-w-[85%] p-4 shadow-md transition-all duration-300 hover:shadow-lg ${
-              message.type === 'user' 
-                ? 'bg-gradient-to-r from-forest-600 to-forest-700 text-white ml-auto border-0' 
-                : 'bg-white border-forest-200 hover:border-forest-300'
-            }`}>
-              {message.imageUrl && (
-                <img 
-                  src={message.imageUrl} 
-                  alt="Uploaded crop" 
-                  className="w-full h-40 object-cover rounded-lg mb-3 shadow-sm" 
-                />
-              )}
-              <p className={`text-sm leading-relaxed ${message.type === 'user' ? 'text-white' : 'text-gray-800'}`}>
-                {message.content}
-              </p>
-              <p className={`text-xs mt-2 ${
-                message.type === 'user' ? 'text-forest-100' : 'text-gray-500'
-              }`}>
-                {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-              </p>
-            </Card>
-          </div>
-        ))}
-        
-        {/* Enhanced Loading State */}
-        {isLoading && (
-          <div className="text-left animate-fade-in">
-            <Card className="inline-block p-4 bg-white border-forest-200 shadow-md">
-              <div className="flex items-center space-x-3">
-                <div className="relative">
-                  <Loader2 className="h-5 w-5 animate-spin text-forest-600" />
-                  <div className="absolute inset-0 h-5 w-5 border-2 border-forest-200 rounded-full animate-pulse"></div>
-                </div>
-                <div className="space-y-1">
-                  <span className="text-sm text-forest-700 font-medium">
-                    {isTyping ? 'Analyzing your question...' : 'Thinking...'}
-                  </span>
-                  <div className="flex space-x-1">
-                    <div className="w-2 h-2 bg-forest-400 rounded-full animate-bounce"></div>
-                    <div className="w-2 h-2 bg-forest-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                    <div className="w-2 h-2 bg-forest-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+      {/* Messages Container */}
+      <div className="flex-1 overflow-y-auto">
+        <div className="max-w-4xl mx-auto px-6 py-8 space-y-6">
+          {messages.map((message, index) => (
+            <div 
+              key={message.id} 
+              className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'} animate-fade-in`}
+              style={{ animationDelay: `${index * 0.1}s` }}
+            >
+              <div className={`max-w-[80%] ${message.type === 'user' ? 'order-2' : 'order-1'}`}>
+                {/* Avatar */}
+                <div className={`flex items-end space-x-3 ${message.type === 'user' ? 'flex-row-reverse space-x-reverse' : ''}`}>
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
+                    message.type === 'user' 
+                      ? 'bg-gradient-to-br from-blue-500 to-purple-600' 
+                      : 'bg-gradient-to-br from-green-500 to-emerald-600'
+                  }`}>
+                    {message.type === 'user' ? (
+                      <span className="text-white text-xs font-semibold">You</span>
+                    ) : (
+                      <MessageCircle className="h-4 w-4 text-white" />
+                    )}
+                  </div>
+                  
+                  {/* Message Bubble */}
+                  <div className={`relative px-4 py-3 rounded-2xl shadow-sm ${
+                    message.type === 'user'
+                      ? 'bg-gradient-to-br from-blue-500 to-purple-600 text-white rounded-br-md'
+                      : 'bg-white border border-gray-100 text-gray-800 rounded-bl-md shadow-md'
+                  }`}>
+                    {message.imageUrl && (
+                      <img 
+                        src={message.imageUrl} 
+                        alt="Uploaded crop" 
+                        className="w-full max-w-sm h-48 object-cover rounded-xl mb-3 shadow-sm" 
+                      />
+                    )}
+                    <p className="text-sm leading-relaxed">{message.content}</p>
+                    <p className={`text-xs mt-2 opacity-70 ${
+                      message.type === 'user' ? 'text-white/80' : 'text-gray-500'
+                    }`}>
+                      {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    </p>
                   </div>
                 </div>
               </div>
-            </Card>
-          </div>
-        )}
-        <div ref={messagesEndRef} />
+            </div>
+          ))}
+          
+          {/* Typing Indicator */}
+          {isLoading && (
+            <div className="flex justify-start animate-fade-in">
+              <div className="flex items-end space-x-3">
+                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center">
+                  <MessageCircle className="h-4 w-4 text-white" />
+                </div>
+                <div className="bg-white border border-gray-100 rounded-2xl rounded-bl-md px-4 py-3 shadow-md">
+                  <div className="flex items-center space-x-2">
+                    <div className="flex space-x-1">
+                      <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
+                      <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                      <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                    </div>
+                    <span className="text-xs text-gray-500">Kisan AI is thinking...</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+          <div ref={messagesEndRef} />
+        </div>
       </div>
 
-      {/* Enhanced Quick Questions */}
+      {/* Quick Suggestions */}
       {messages.length === 1 && (
-        <div className="px-4 pb-4 max-w-md mx-auto w-full">
-          <div className="space-y-3">
-            <div className="text-center">
-              <p className="text-sm text-forest-700 font-semibold mb-1">Quick Start</p>
-              <p className="text-xs text-gray-600">Try asking about these topics:</p>
-            </div>
-            <div className="grid grid-cols-2 gap-2">
-              {quickQuestions.map((question, index) => (
-                <Button
-                  key={index}
-                  variant="outline"
-                  className="text-left justify-start border-forest-200 text-forest-700 hover:bg-gradient-to-r hover:from-forest-50 hover:to-earth-50 hover:border-forest-300 transition-all duration-200 p-3 h-auto text-xs leading-tight"
-                  onClick={() => sendMessage(question.replace(/^[🍅🍃📋🥔]\s/, ''))}
-                >
-                  <span className="truncate">{question}</span>
-                </Button>
-              ))}
-            </div>
+        <div className="max-w-4xl mx-auto px-6 pb-6">
+          <div className="text-center mb-4">
+            <p className="text-sm text-gray-600 font-medium mb-2">Popular topics</p>
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            {quickSuggestions.map((suggestion, index) => (
+              <Button
+                key={index}
+                variant="outline"
+                className="h-auto p-4 border-gray-200 hover:border-green-300 hover:bg-green-50 transition-all duration-200 rounded-xl"
+                onClick={() => sendMessage(suggestion.query)}
+              >
+                <div className="flex items-center space-x-3 text-left">
+                  <span className="text-lg">{suggestion.icon}</span>
+                  <div>
+                    <p className="font-medium text-gray-900 text-sm">{suggestion.text}</p>
+                    <p className="text-xs text-gray-500 truncate">{suggestion.query}</p>
+                  </div>
+                </div>
+              </Button>
+            ))}
           </div>
         </div>
       )}
 
-      {/* Enhanced Input Area */}
-      <div className="bg-white border-t border-gray-200 p-4 shadow-lg">
-        <div className="max-w-md mx-auto">
-          <div className="flex items-end space-x-3">
-            {/* Enhanced Text Input */}
-            <div className="flex-1 relative">
-              <div className="flex items-center bg-gradient-to-r from-gray-50 to-gray-100 rounded-2xl border border-gray-200 focus-within:border-forest-400 focus-within:ring-2 focus-within:ring-forest-100 transition-all duration-200 shadow-sm">
+      {/* Modern Input Area */}
+      <div className="bg-white/80 backdrop-blur-xl border-t border-gray-200/50">
+        <div className="max-w-4xl mx-auto px-6 py-4">
+          <div className="flex items-end space-x-4">
+            {/* Text Input */}
+            <div className="flex-1">
+              <div className="relative">
                 <input
                   type="text"
                   value={inputText}
                   onChange={(e) => setInputText(e.target.value)}
                   placeholder="Ask me anything about farming..."
-                  className="flex-1 bg-transparent outline-none text-sm px-4 py-3 placeholder-gray-500"
+                  className="w-full bg-gray-50 border border-gray-200 rounded-2xl px-4 py-3 pr-12 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200"
                   onKeyPress={(e) => e.key === 'Enter' && handleSendText()}
                 />
                 <Button
                   size="sm"
-                  className="mr-2 bg-gradient-to-r from-forest-600 to-forest-700 hover:from-forest-700 hover:to-forest-800 text-white rounded-xl w-9 h-9 p-0 shadow-md transition-all duration-200 hover:shadow-lg transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                  className="absolute right-2 top-1/2 transform -translate-y-1/2 w-8 h-8 p-0 bg-green-500 hover:bg-green-600 rounded-xl shadow-sm"
                   onClick={handleSendText}
                   disabled={!inputText.trim() || isLoading}
                 >
@@ -236,28 +264,26 @@ const ChatInterface = () => {
               </div>
             </div>
             
-            {/* Enhanced Action Buttons */}
+            {/* Action Buttons */}
             <div className="flex space-x-2">
               <Button
                 size="sm"
-                className={`rounded-2xl w-12 h-12 p-0 shadow-md transition-all duration-300 transform hover:scale-105 ${
+                variant="outline"
+                className={`w-12 h-12 p-0 rounded-xl border-gray-200 transition-all duration-200 ${
                   isRecording 
-                    ? 'bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 animate-pulse' 
-                    : 'bg-gradient-to-r from-earth-600 to-earth-700 hover:from-earth-700 hover:to-earth-800'
-                } text-white disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none`}
+                    ? 'bg-red-50 border-red-200 text-red-600 animate-pulse' 
+                    : 'hover:bg-gray-50'
+                }`}
                 onClick={handleVoiceRecord}
                 disabled={isRecording || isLoading}
               >
-                {isRecording ? (
-                  <MicOff className="h-5 w-5" />
-                ) : (
-                  <Mic className="h-5 w-5" />
-                )}
+                {isRecording ? <MicOff className="h-5 w-5" /> : <Mic className="h-5 w-5" />}
               </Button>
               
               <Button
                 size="sm"
-                className="bg-gradient-to-r from-forest-600 to-forest-700 hover:from-forest-700 hover:to-forest-800 text-white rounded-2xl w-12 h-12 p-0 shadow-md transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                variant="outline"
+                className="w-12 h-12 p-0 rounded-xl border-gray-200 hover:bg-gray-50 transition-all duration-200"
                 onClick={() => fileInputRef.current?.click()}
                 disabled={isLoading}
               >
@@ -266,9 +292,8 @@ const ChatInterface = () => {
             </div>
           </div>
           
-          {/* Input Helper Text */}
-          <p className="text-xs text-gray-500 mt-2 text-center">
-            Type, speak, or upload an image for crop analysis
+          <p className="text-xs text-gray-500 mt-3 text-center">
+            Type your question, record voice message, or upload crop images for analysis
           </p>
         </div>
         

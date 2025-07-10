@@ -9,83 +9,65 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    --background: 120 20% 98%;
-    --foreground: 120 10% 15%;
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
 
     --card: 0 0% 100%;
-    --card-foreground: 120 10% 15%;
+    --card-foreground: 222.2 84% 4.9%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 120 10% 15%;
+    --popover-foreground: 222.2 84% 4.9%;
 
-    --primary: 120 60% 30%;
-    --primary-foreground: 0 0% 98%;
+    --primary: 142.1 76.2% 36.3%;
+    --primary-foreground: 355.7 100% 97.3%;
 
-    --secondary: 120 20% 95%;
-    --secondary-foreground: 120 10% 15%;
+    --secondary: 210 40% 98%;
+    --secondary-foreground: 222.2 84% 4.9%;
 
-    --muted: 120 20% 95%;
-    --muted-foreground: 120 8% 45%;
+    --muted: 210 40% 98%;
+    --muted-foreground: 215.4 16.3% 46.9%;
 
-    --accent: 30 80% 55%;
-    --accent-foreground: 0 0% 98%;
+    --accent: 210 40% 98%;
+    --accent-foreground: 222.2 84% 4.9%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 120 20% 90%;
-    --input: 120 20% 90%;
-    --ring: 120 60% 30%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 142.1 76.2% 36.3%;
 
-    --radius: 0.5rem;
-
-    --sidebar-background: 120 20% 98%;
-    --sidebar-foreground: 120 10% 15%;
-    --sidebar-primary: 120 60% 30%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 120 20% 95%;
-    --sidebar-accent-foreground: 120 10% 15%;
-    --sidebar-border: 120 20% 90%;
-    --sidebar-ring: 120 60% 30%;
+    --radius: 0.75rem;
   }
 
   .dark {
-    --background: 120 15% 8%;
-    --foreground: 120 10% 95%;
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
 
-    --card: 120 15% 10%;
-    --card-foreground: 120 10% 95%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
 
-    --popover: 120 15% 10%;
-    --popover-foreground: 120 10% 95%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
 
-    --primary: 120 50% 60%;
-    --primary-foreground: 120 15% 8%;
+    --primary: 142.1 70.6% 45.3%;
+    --primary-foreground: 144.9 80.4% 10%;
 
-    --secondary: 120 15% 15%;
-    --secondary-foreground: 120 10% 95%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
 
-    --muted: 120 15% 15%;
-    --muted-foreground: 120 8% 65%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
 
-    --accent: 30 70% 50%;
-    --accent-foreground: 120 15% 8%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
 
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 120 15% 20%;
-    --input: 120 15% 20%;
-    --ring: 120 50% 60%;
-
-    --sidebar-background: 120 15% 8%;
-    --sidebar-foreground: 120 10% 95%;
-    --sidebar-primary: 120 50% 60%;
-    --sidebar-primary-foreground: 120 15% 8%;
-    --sidebar-accent: 120 15% 15%;
-    --sidebar-accent-foreground: 120 10% 95%;
-    --sidebar-border: 120 15% 20%;
-    --sidebar-ring: 120 50% 60%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 142.4 71.8% 29.2%;
   }
 }
 
@@ -96,38 +78,34 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground;
-    background-image: 
-      radial-gradient(circle at 25% 25%, rgba(34, 197, 94, 0.08) 0%, transparent 50%),
-      radial-gradient(circle at 75% 75%, rgba(249, 115, 22, 0.08) 0%, transparent 50%);
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  /* Modern scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: hsl(214.3 31.8% 91.4%);
+    border-radius: 3px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: hsl(215.4 16.3% 46.9%);
   }
 }
 
 @layer components {
-  .voice-recording {
-    animation: pulse-grow 2s ease-in-out infinite;
-  }
-  
-  .farmer-card {
-    @apply bg-gradient-to-br from-forest-50 to-forest-100 border-forest-200 shadow-lg hover:shadow-xl transition-all duration-300;
-  }
-  
-  .action-button {
-    @apply bg-gradient-to-r from-forest-600 to-forest-700 hover:from-forest-700 hover:to-forest-800 text-white font-semibold py-4 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105;
-  }
-  
-  .market-card {
-    @apply bg-gradient-to-br from-harvest-50 to-harvest-100 border-harvest-200;
-  }
-  
-  .scheme-card {
-    @apply bg-gradient-to-br from-earth-50 to-earth-100 border-earth-200;
-  }
-
-  /* Enhanced animations for better UX */
+  /* Enhanced animations for modern UI */
   @keyframes fade-in {
     from {
       opacity: 0;
-      transform: translateY(10px);
+      transform: translateY(8px);
     }
     to {
       opacity: 1;
@@ -135,12 +113,34 @@ All colors MUST be HSL.
     }
   }
 
-  @keyframes bounce-subtle {
-    0%, 100% {
+  @keyframes slide-up {
+    from {
+      opacity: 0;
+      transform: translateY(16px);
+    }
+    to {
+      opacity: 1;
       transform: translateY(0);
     }
-    50% {
-      transform: translateY(-2px);
+  }
+
+  @keyframes scale-in {
+    from {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  @keyframes shimmer {
+    0% {
+      background-position: -200px 0;
+    }
+    100% {
+      background-position: calc(200px + 100%) 0;
     }
   }
 
@@ -148,7 +148,74 @@ All colors MUST be HSL.
     animation: fade-in 0.4s ease-out forwards;
   }
 
-  .animate-bounce-subtle {
-    animation: bounce-subtle 0.6s ease-in-out infinite;
+  .animate-slide-up {
+    animation: slide-up 0.5s ease-out forwards;
+  }
+
+  .animate-scale-in {
+    animation: scale-in 0.3s ease-out forwards;
+  }
+
+  .animate-shimmer {
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.4),
+      transparent
+    );
+    background-size: 200px 100%;
+    animation: shimmer 1.5s infinite;
+  }
+
+  /* Modern glass morphism effect */
+  .glass {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  /* Improved focus states */
+  .focus-ring {
+    @apply focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary;
+  }
+
+  /* Modern shadow utilities */
+  .shadow-modern {
+    box-shadow: 
+      0 1px 3px 0 rgba(0, 0, 0, 0.1),
+      0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  }
+
+  .shadow-modern-lg {
+    box-shadow: 
+      0 10px 15px -3px rgba(0, 0, 0, 0.1),
+      0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  }
+}
+
+/* Preserve original forest/earth theme colors for compatibility */
+@layer base {
+  :root {
+    --forest-50: 120 60% 97%;
+    --forest-100: 120 60% 94%;
+    --forest-200: 120 60% 87%;
+    --forest-300: 120 60% 77%;
+    --forest-400: 120 60% 65%;
+    --forest-500: 120 60% 50%;
+    --forest-600: 120 60% 40%;
+    --forest-700: 120 60% 30%;
+    --forest-800: 120 60% 22%;
+    --forest-900: 120 60% 15%;
+
+    --earth-50: 30 60% 97%;
+    --earth-100: 30 60% 94%;
+    --earth-200: 30 60% 87%;
+    --earth-300: 30 60% 77%;
+    --earth-400: 30 60% 65%;
+    --earth-500: 30 60% 50%;
+    --earth-600: 30 60% 40%;
+    --earth-700: 30 60% 30%;
+    --earth-800: 30 60% 22%;
+    --earth-900: 30 60% 15%;
   }
 }
