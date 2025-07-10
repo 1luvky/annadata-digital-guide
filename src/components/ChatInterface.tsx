@@ -104,17 +104,17 @@ const ChatInterface = () => {
   ];
 
   return (
-    <div className="flex flex-col h-screen bg-gradient-to-br from-green-50 via-white to-orange-50">
+    <div className="flex flex-col h-screen bg-gradient-to-br from-green-50 via-white to-orange-50 pb-20">
       {/* Header */}
-      <div className="bg-gradient-to-r from-forest-600 to-forest-700 text-white py-4 px-4 flex-shrink-0">
+      <div className="bg-gradient-to-r from-forest-600 to-forest-700 text-white py-4 px-4">
         <div className="max-w-md mx-auto text-center">
           <h1 className="text-xl font-bold">Project Kisan Assistant</h1>
           <p className="text-forest-100 text-sm">Your AI farming expert</p>
         </div>
       </div>
 
-      {/* Messages - Fixed height with scroll */}
-      <div className="flex-1 overflow-y-auto px-4 py-4 max-w-md mx-auto w-full min-h-0">
+      {/* Messages */}
+      <div className="flex-1 overflow-y-auto px-4 py-4 max-w-md mx-auto w-full">
         {messages.map((message) => (
           <div key={message.id} className={`mb-4 ${message.type === 'user' ? 'text-right' : 'text-left'}`}>
             <Card className={`inline-block max-w-[80%] p-3 ${
@@ -143,29 +143,29 @@ const ChatInterface = () => {
             </Card>
           </div>
         )}
-
-        {/* Quick Questions - Only show when there's just the welcome message */}
-        {messages.length === 1 && (
-          <div className="mt-4">
-            <div className="space-y-2">
-              <p className="text-sm text-forest-700 font-medium">Quick questions:</p>
-              {quickQuestions.map((question, index) => (
-                <Button
-                  key={index}
-                  variant="outline"
-                  className="w-full text-left justify-start border-forest-200 text-forest-700 hover:bg-forest-50"
-                  onClick={() => sendMessage(question)}
-                >
-                  {question}
-                </Button>
-              ))}
-            </div>
-          </div>
-        )}
       </div>
 
-      {/* Input Area - Fixed at bottom */}
-      <div className="bg-white border-t border-gray-200 p-4 flex-shrink-0">
+      {/* Quick Questions */}
+      {messages.length === 1 && (
+        <div className="px-4 pb-4 max-w-md mx-auto w-full">
+          <div className="space-y-2">
+            <p className="text-sm text-forest-700 font-medium">Quick questions:</p>
+            {quickQuestions.map((question, index) => (
+              <Button
+                key={index}
+                variant="outline"
+                className="w-full text-left justify-start border-forest-200 text-forest-700 hover:bg-forest-50"
+                onClick={() => sendMessage(question)}
+              >
+                {question}
+              </Button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Input Area */}
+      <div className="bg-white border-t border-gray-200 p-4">
         <div className="max-w-md mx-auto flex items-center space-x-2">
           <div className="flex-1 flex items-center bg-gray-100 rounded-full px-3 py-2">
             <input
